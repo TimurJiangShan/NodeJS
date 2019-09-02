@@ -1,1 +1,2 @@
 # WeatherAPP
+## Available Scripts
