@@ -9,7 +9,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "mongoose": "^5.10.15",
+    "keke-lib-742345": "^1.0.1",
     "underscore": "^1.11.0"
+  },
+  "devDependencies": {
+    "jshint": "^2.12.0"
   }
 }
