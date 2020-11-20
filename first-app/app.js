@@ -1,18 +1,12 @@
 const EventEmitter = require('events');
 
-// fs.readdir('$', function(err, files){
-//   if(err) 
-//     console.log(`Error: ${err}`);
-//   else 
-//     console.log(`Result: ${files}`);
-// });
-
-const emitter = new EventEmitter();
-
 // Register a listener
-emitter.on('messageLogged', function(){
-  console.log('Listener called');
+const Logger = require('./logger');
+const logger = new Logger();
+
+logger.on('messageLogged', arg => {
+  console.log('Listener called', arg);
 });
 
-// Raise an event
-emitter.emit('messageLogged');
+logger.log('message');
+
