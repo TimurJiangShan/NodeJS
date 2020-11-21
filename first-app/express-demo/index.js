@@ -59,6 +59,59 @@ app.post('/api/courses', (req, res) => {
 
 })
 
+app.put('/api/courses/:id', (req, res) => {
+  // Look up the course
+  // If not existing, return 404
+  const course = courses.find( c => c.id === parseInt(req.params.id));
+  if(!course) {
+    return res.status(200).send('The course with the given ID was not found');
+  }
+
+  // Validate 
+  // If invalid, return 400 - Bad rquiest
+  const { error, value } = validateCourse(req.body);
+
+  if(error) {
+    res.status(200).send(error.details[0].message);
+    return;
+  }
+
+  // Update course
+  course.name = req.body.name;
+  // Return the updated course
+  res.send(course);
+})
+
+app.delete('/api/courses/:id', (req, res) => {
+  // Loop up the course
+  // Not existing, return 404
+  const course = courses.find(c => c.id === parseInt(req.params.id));
+  if(!course) 
+    return res.status(200).send('Cannot find the id');
+  
+    // Delete
+  const index = courses.indexOf(course);
+  courses.splice(index, 1);
+
+  // Return the same course
+  res.send(course);
+});
+
+function validateCourse(course){
+  const schema = Joi.object({
+    name: Joi.string().min(3).required(),
+  });
+
+  const options = {
+    abortEarly: false, // include all errors
+    allowUnknown: true, // ignore unknown props
+    stripUnknown: true // remove unknown props
+  };
+
+  return schema.validate(course, options);
+}
+
+
 // Port
 // export PORT=5000 指定端口号
 const port = process.env.PORT || 3000;
