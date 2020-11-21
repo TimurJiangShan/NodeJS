@@ -13,6 +13,10 @@ app.get('/api/users', (req, res) => {
   res.send([1,2,3,4]);
 })
 
-app.listen(3000, () => {
-  console.log('Listening on port 3000');
+// Port
+// export PORT=5000 指定端口号
+const port = process.env.PORT || 3000;
+
+app.listen(port, () => {
+  console.log(`Listening on port ${port}...`);
 })
