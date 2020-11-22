@@ -1,8 +1,19 @@
 const express = require('express');
 const Joi = require('joi');
 const app = express();
+const logger = require('./logger');
+const helmet = require("helmet");
+const morgan = require('morgan');
 
-app.use(express.json()); // 使用中间件
+app.use(express.json()); // 使用中间件 req.body
+app.use(express.urlencoded({ extended: true })); // 
+app.use(express.static('public')); // serve static content
+app.use(helmet());
+app.use(morgan('tiny'));
+
+
+// next: next middleware function
+app.use(logger);
 
 const courses = [
   { id: 1, name: 'course1'},
@@ -17,7 +28,6 @@ app.get('/', (req, res) => {
 app.get('/api/courses', (req, res) => {
   res.send(courses);
 })
-
 
 app.get('/api/courses/:id', (req, res) => {
   const course = courses.find(c => c.id === parseInt(req.params.id));
@@ -112,7 +122,7 @@ function validateCourse(course){
 }
 
 
-// Port
+// Portr
 // export PORT=5000 指定端口号
 const port = process.env.PORT || 3000;
 
