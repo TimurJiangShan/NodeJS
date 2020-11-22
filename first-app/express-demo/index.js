@@ -4,16 +4,30 @@ const app = express();
 const logger = require('./logger');
 const helmet = require("helmet");
 const morgan = require('morgan');
+const config = require('config');
 
 app.use(express.json()); // 使用中间件 req.body
 app.use(express.urlencoded({ extended: true })); // 
 app.use(express.static('public')); // serve static content
 app.use(helmet());
-app.use(morgan('tiny'));
-
-
 // next: next middleware function
 app.use(logger);
+
+// Configuration
+console.log(`Application Name: ${config.get('name')}`);
+console.log(`Mail Server: ${config.get('mail.host')}`);
+
+// console.log(`NODE_ENV: ${process.env.NODE_ENV}`);
+// console.log(`app: ${app.get('env')}`); // 默认是development
+
+/**
+ * 切换环境 export NODE_ENV=production
+*/
+
+if(app.get('env') === 'development') {
+  app.use(morgan('tiny'));
+  console.log('Morgan Enabled...')
+}
 
 const courses = [
   { id: 1, name: 'course1'},
