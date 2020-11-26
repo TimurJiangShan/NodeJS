@@ -22,22 +22,39 @@ function getCommits(repo) {
   return new Promise((resolve, reject) => {
       setTimeout(() => {
       console.log('Calling Github API...');
-      resolve([repo]);
+      resolve(repo);
     }, 2000);
   })
 }
 
 console.log('Before');
 
-getUser(1)
-  .then(user => getRepositories(user.gitHubUsername))
-  .then(repo => getCommits(repo[0]))
-  .then(message => console.log(message))
-  .catch(error => console.log('error', error.message));
+// getUser(1)
+//   .then(user => getRepositories(user.gitHubUsername))
+//   .then(repo => getCommits(repo[0]))
+//   .then(message => console.log(message))
+//   .catch(error => console.log('error', error.message));
 
 // const p = getUser(1).then((user) => {
 //   console.log(user);
 // })
 
+// Async and await approach
+async function displayCommits() {
+  try {
+    const user = await getUser(1);
+    console.log('User: ', user);
+    const repos = await getRepositories(user.gitHubUsername);
+    console.log('Repos: ', repos);
+    const commits = await getCommits(repos[0]);
+    console.log(commits);
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+displayCommits();
 console.log('After');
+
+
 
