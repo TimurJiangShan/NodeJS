@@ -1,5 +1,4 @@
 const express = require('express');
-const Joi = require('joi');
 const app = express();
 const logger = require('./middleware/logger');
 const helmet = require("helmet");
@@ -21,6 +20,7 @@ app.use(logger);
 app.use('/api/courses', courses);
 app.use('/', home);
 
+// 模板引擎
 app.set('view engine', 'pug');
 app.set('views' ,'./views');
 
