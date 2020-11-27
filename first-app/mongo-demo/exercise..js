@@ -79,12 +79,17 @@ async function updateCourse(id) {
   // Approach Update first
   // Update directly
   // Optinally, get the updated document
-  const course = await Course.findByIdAndUpdate(id, { $set: { name: 'jason bourne', isPublished: false }}, { new: true });
+  const course = await Course.findByIdAndUpdate(id, 
+      { $set: { name: 'jason bourne', isPublished: false }}, { new: true });
   console.log(course);
 }
 
+async function deleteCourse(id){
+  const result = await Course.deleteOne({ _id : id });
+  console.log(result);
+}
 
-updateCourse("5a68fdc3615eda645bc6bdec");
+deleteCourse("5a68fdc3615eda645bc6bdec");
 
 
 // run();

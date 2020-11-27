@@ -42,7 +42,6 @@ async function getCourses() {
    * 分页：
    * 一般是像这种形式
    * /api/courses?pageNumber=2&pageSize=10
-   * 
   */
 
   const pageNumber = 2;
@@ -66,8 +65,7 @@ async function getCourses() {
  * 正则表达式：
  * /pattern/
  * ^: starts with something（以。。。为开头）  /^Mosh/
- * $: ends with something /Hamidani$/i    i代表大小写不明感
- 
+ * $: ends with something /Hamidani$/i    i代表大小写不敏感
 */
 //  /.*Mosh.*/i 匹配中间有Mosh的字符串。 i代表忽略大小写
 
