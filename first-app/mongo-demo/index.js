@@ -72,4 +72,6 @@ async function getCourses() {
 //  /.*Mosh.*/i 匹配中间有Mosh的字符串。 i代表忽略大小写
 
 // createCourse();
-getCourses();
+
+
+// getCourses();

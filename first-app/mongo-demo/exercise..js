@@ -8,6 +8,7 @@ mongoose.connect('mongodb://localhost/mongo-exercises');
 // and display them,
 
 const courseSchema = new mongoose.Schema({
+  _id: String,
   name: String,
   author: String,
   tags: [ String ],
@@ -51,8 +52,39 @@ async function run() {
 async function getCourses(){
   const courses = await Course  
     .find({ isPublished: true })
-    .or([{ price: { $gte: 15 }}, { name: /.*by.*/ } ])
+    .or([
+      { price: { $gte: 15 }}, 
+      { name: /.*by.*/i } ])
   return courses;
 } 
 
-run();
+
+async function updateCourse(id) {
+
+  // Approach : query first
+  // findById();
+  // Modify its propertities
+  // save
+
+  // const course = await Course.findById(id);
+  // console.log(course);
+
+  // if(!course) return;
+  // course.isPublished = false;
+  // course.author = "Another author";
+  // const result = await course.save();
+  // console.log(result);
+
+
+  // Approach Update first
+  // Update directly
+  // Optinally, get the updated document
+  const course = await Course.findByIdAndUpdate(id, { $set: { name: 'jason bourne', isPublished: false }}, { new: true });
+  console.log(course);
+}
+
+
+updateCourse("5a68fdc3615eda645bc6bdec");
+
+
+// run();
