@@ -36,12 +36,23 @@ async function run() {
 // pick only their name and author
 // and display them
 
-async function getCourses() {
-  const courses = await Course
-    .find({ isPublished: true, tags: { $in: ['frontend','backend'] } })
-    .sort({ price: -1})
-    .select({ name: 1, author: 1 });
+// async function getCourses() {
+//   const courses = await Course
+//     .find({ isPublished: true }) // 将requried和optional分开
+//     .or([ { tags: "frontend"} , { tags: "backend" }])
+//     .sort({ price: -1})
+//     .select({ name: 1, author: 1 });
+//   return courses;
+// }
+
+// Get all the publshed courses that are $15 or more,
+// or have the word 'by' in their title
+
+async function getCourses(){
+  const courses = await Course  
+    .find({ isPublished: true })
+    .or([{ price: { $gte: 15 }}, { name: /.*by.*/ } ])
   return courses;
-}
+} 
 
 run();
