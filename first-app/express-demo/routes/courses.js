@@ -3,51 +3,12 @@ const Joi = require('joi');
 const router = express.Router();
 const mongoose = require('mongoose');
 var bodyParser = require("body-parser");
+const { Course }  = require('../models/courses');
+
 router.use(bodyParser.urlencoded({ extended: false }))
 router.use(bodyParser.json())
 
 
-mongoose.connect('mongodb://localhost/mongo-exercises')
-  .then(() => {
-    console.log("Connecting succeeded");
-  })
-  .catch(() => {
-    console.log("Connecting failed");
-  });
-
-
-// const courses = [
-//   { id: 1, name: 'course1'},
-//   { id: 2, name: 'course2'},
-//   { id: 3, name: 'course3'},
-// ];
-
-const courseSchema = new mongoose.Schema({
-  _id: String,
-  name: {
-    type: String,
-    minlength: 5,
-    maxlength: 255,
-  },
-  category: {
-    enum: ['web','browser','ml'],
-    required: true,
-    type: String,
-  },
-  author: String,
-  tags: [ String ],
-  date: { type: Date, default: Date.now },
-  isPublished: Boolean,
-  price: {
-    type: Number,
-    required: function() {
-      return this.isPublished;
-    },
-  },
-  __v: String,
-});
-
-const Course = mongoose.model('Course', courseSchema);
 async function getCourse(){
   const courses = await Course
     .find()
