@@ -1,20 +1,45 @@
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost/mongo-exercises');
+mongoose.connect('mongodb://localhost/mongo-exercises')
+  .then(() => {
+    console.log("Connecting succeeded");
+  })
+  .catch(() => {
+    console.log("Connecting failed");
+  });
 
 // get all the published backend courses,
 // sort them by their name,
 // pick only their name and author,
 // and display them,
 
+
+// 箭头函数没有自己的this
+
+// Build-in validator
+
 const courseSchema = new mongoose.Schema({
   _id: String,
-  name: String,
+  name: {
+    type: String,
+    minlength: 5,
+    maxlength: 255,
+  },
+  category: {
+    enum: ['web','browser','ml'],
+    required: true,
+    type: String,
+  },
   author: String,
   tags: [ String ],
   date: { type: Date, default: Date.now },
   isPublished: Boolean,
-  price: Number,
+  price: {
+    type: Number,
+    required: function() {
+      return this.isPublished;
+    },
+  },
   __v: String,
 });
 
@@ -32,6 +57,22 @@ async function run() {
   console.log(courses);
 }
 
+async function createCourse() {
+  
+  const course = new Course({
+    _id: 'asdf',
+    name: 'Angular Course',
+    author: 'Jiangshan',
+    tags: ['angular','frontend'],
+    isPublished: false,
+    category: 'web',
+  });
+  
+  const result = await course.save(); // 异步的
+  console.log(result);
+}
+
+createCourse();
 // Get all the published frontend and backend courses,
 // Sort them by their price in a descending order
 // pick only their name and author
@@ -89,7 +130,7 @@ async function deleteCourse(id){
   console.log(result);
 }
 
-deleteCourse("5a68fdc3615eda645bc6bdec");
+// deleteCourse("5a68fdc3615eda645bc6bdec");
 
 
 // run();

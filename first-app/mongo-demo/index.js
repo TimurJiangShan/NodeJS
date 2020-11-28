@@ -1,3 +1,15 @@
+/**
+ * 连接MongoDB
+ * 1. 配置连接字符串
+ * 2. 定义 Schema
+ * 3. 创建一个Model
+ * 
+ * CRUD操作
+ * 1、 
+ * 
+*/
+
+
 const mongoose = require('mongoose');
 
 mongoose.connect('mongodb://localhost/playground') // 返回一个promise

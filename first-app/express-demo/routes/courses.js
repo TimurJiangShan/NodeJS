@@ -1,25 +1,71 @@
 const express = require('express');
 const Joi = require('joi');
 const router = express.Router();
+const mongoose = require('mongoose');
+
+mongoose.connect('mongodb://localhost/mongo-exercises')
+  .then(() => {
+    console.log("Connecting succeeded");
+  })
+  .catch(() => {
+    console.log("Connecting failed");
+  });
 
 
-const courses = [
-  { id: 1, name: 'course1'},
-  { id: 2, name: 'course2'},
-  { id: 3, name: 'course3'},
-];
+// const courses = [
+//   { id: 1, name: 'course1'},
+//   { id: 2, name: 'course2'},
+//   { id: 3, name: 'course3'},
+// ];
 
+const courseSchema = new mongoose.Schema({
+  _id: String,
+  name: {
+    type: String,
+    minlength: 5,
+    maxlength: 255,
+  },
+  category: {
+    enum: ['web','browser','ml'],
+    required: true,
+    type: String,
+  },
+  author: String,
+  tags: [ String ],
+  date: { type: Date, default: Date.now },
+  isPublished: Boolean,
+  price: {
+    type: Number,
+    required: function() {
+      return this.isPublished;
+    },
+  },
+  __v: String,
+});
 
-router.get('/', (req, res) => {
+const Course = mongoose.model('Course', courseSchema);
+async function getCourse(){
+  const courses = await Course
+    .find()
+    .sort({ name: 1 })
+    .select({ name: 1, author: 1 });
+  return courses;
+}
+
+router.get('/', async (req, res) => {
+  const courses = await getCourse();
   res.send(courses);
 })
 
-router.get('/:id', (req, res) => {
-  const course = courses.find(c => c.id === parseInt(req.params.id));
+router.get('/:id', async (req, res) => {
+  // const course = courses.find(c => c.id === parseInt(req.params.id));
+  const course = await Course
+    .find({ _id: req.params.id})
+    .sort({ name: 1 })
   if(!course) 
     res.status(200).send('The course with the given ID was not found');
   res.send(course);
-})
+});
 
 router.post('/', (req, res) => {
   const schema = Joi.object({
