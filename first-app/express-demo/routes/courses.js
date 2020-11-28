@@ -2,6 +2,10 @@ const express = require('express');
 const Joi = require('joi');
 const router = express.Router();
 const mongoose = require('mongoose');
+var bodyParser = require("body-parser");
+router.use(bodyParser.urlencoded({ extended: false }))
+router.use(bodyParser.json())
+
 
 mongoose.connect('mongodb://localhost/mongo-exercises')
   .then(() => {
@@ -67,58 +71,77 @@ router.get('/:id', async (req, res) => {
   res.send(course);
 });
 
-router.post('/', (req, res) => {
-  const schema = Joi.object({
-    name: Joi.string().min(3).required(),
-  });
+router.post('/', async (req, res) => {
+  // const schema = Joi.object({
+  //   name: Joi.string().min(3).required(),
+  // });
 
-  const options = {
-    abortEarly: false, // include all errors
-    allowUnknown: true, // ignore unknown props
-    stripUnknown: true // remove unknown props
-  };
+  // const options = {
+  //   abortEarly: false, // include all errors
+  //   allowUnknown: true, // ignore unknown props
+  //   stripUnknown: true // remove unknown props
+  // };
 
-  const { error, value } = schema.validate(req.body, options);
-  if(error) {
-    res.status(200).send(error.details[0].message);
-    return;
+  // const { error, value } = schema.validate(req.body, options);
+  // if(error) {
+  //   res.status(200).send(error.details[0].message);
+  //   return;
+  // }
+
+  // if(!req.body.name || req.body.name.length < 3) {
+  //   // 400 Bad Request
+  //   res.status(400).send('Name is required and should be minium 3 characters');
+  //   return;
+  // }
+  // const course = {
+  //   id: courses.length + 1,
+  //   name: req.body.name,
+  // }
+  // courses.push(course);
+  // res.send(course);
+  try {
+    const course = new Course(req.body);
+    await course.save();
+  } catch (error) {
+    res.status(200).send(error.message);
   }
-
-  if(!req.body.name || req.body.name.length < 3) {
-    // 400 Bad Request
-    res.status(400).send('Name is required and should be minium 3 characters');
-    return;
-  }
-  const course = {
-    id: courses.length + 1,
-    name: req.body.name,
-  }
-  courses.push(course);
-  res.send(course);
-
 })
 
-router.put('/:id', (req, res) => {
+router.put('/', async (req, res) => {
   // Look up the course
   // If not existing, return 404
-  const course = courses.find( c => c.id === parseInt(req.params.id));
-  if(!course) {
-    return res.status(200).send('The course with the given ID was not found');
+  // const course = courses.find( c => c.id === parseInt(req.params.id));
+  // if(!course) {
+  //   return res.status(200).send('The course with the given ID was not found');
+  // }
+
+  // // Validate 
+  // // If invalid, return 400 - Bad rquiest
+  // const { error, value } = validateCourse(req.body);
+
+  // if(error) {
+  //   res.status(200).send(error.details[0].message);
+  //   return;
+  // }
+
+  // // Update course
+  // course.name = req.body.name;
+  // // Return the updated course
+  // res.send(course);
+  console.log(req.body);
+  try {
+    await Course
+      .findByIdAndUpdate(req.query.id,{
+        $set: {
+          name: req.body.name,
+          isPublished: req.body.isPublished,
+          price: req.body.price
+        }
+      });
+    res.status(200).send("Update succeeded");
+  } catch (error) {
+    res.status(400).send(error.message);
   }
-
-  // Validate 
-  // If invalid, return 400 - Bad rquiest
-  const { error, value } = validateCourse(req.body);
-
-  if(error) {
-    res.status(200).send(error.details[0].message);
-    return;
-  }
-
-  // Update course
-  course.name = req.body.name;
-  // Return the updated course
-  res.send(course);
 })
 
 router.delete('/:id', (req, res) => {
