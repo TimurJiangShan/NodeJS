@@ -163,7 +163,6 @@ router.delete('/', async (req, res) => {
   /**
    * 如果想在postman的params里面设置值，路由就得 / ， req.query
    * 如果想直接在浏览器直接输ID，那么路由就得设置成  /:id , req.params
-   * 
   */
 });
 
