@@ -128,7 +128,6 @@ router.put('/', async (req, res) => {
   // course.name = req.body.name;
   // // Return the updated course
   // res.send(course);
-  console.log(req.body);
   try {
     await Course
       .findByIdAndUpdate(req.query.id,{
@@ -144,19 +143,28 @@ router.put('/', async (req, res) => {
   }
 })
 
-router.delete('/:id', (req, res) => {
+router.delete('/', async (req, res) => {
   // Loop up the course
   // Not existing, return 404
-  const course = courses.find(c => c.id === parseInt(req.params.id));
-  if(!course) 
-    return res.status(200).send('Cannot find the id');
+  // const course = courses.find(c => c.id === parseInt(req.params.id));
+  // if(!course) 
+  //   return res.status(200).send('Cannot find the id');
   
-    // Delete
-  const index = courses.indexOf(course);
-  courses.splice(index, 1);
+  //   // Delete
+  // const index = courses.indexOf(course);
+  // courses.splice(index, 1);
 
-  // Return the same course
-  res.send(course);
+  // // Return the same course
+  // res.send(course);
+  const result = await Course.deleteOne({ _id: req.query.id });
+  console.log(result);
+
+  // 注意区分queryString和params。
+  /**
+   * 如果想在postman的params里面设置值，路由就得 / ， req.query
+   * 如果想直接在浏览器直接输ID，那么路由就得设置成  /:id , req.params
+   * 
+  */
 });
 
 function validateCourse(course){
