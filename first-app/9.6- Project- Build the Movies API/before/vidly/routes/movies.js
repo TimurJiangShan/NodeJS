@@ -1,4 +1,5 @@
 const { Movie, validate} = require('../models/movies');
+const { Genre } = require('../models/genre');
 const mongoose = require('mongoose');
 const express = require('express');
 const router = express.Router();
@@ -12,9 +13,18 @@ router.post('/', async (req, res) => {
   const { error } = validate(req.body);
   if(error) return res.status(400).send(error.details[0].message);
 
+  const genre = await Genre.findById(req.body.genreId);
+  if(!genre) return res.status(400).send("Invalid genre");
+
   let movie = new Movie({
-    name: req.body.name
-  });
+    title: req.body.title, 
+    numberInStock: req.body.numberInStock,
+    dailyRentalRate: req.body.dailyRentalRate,
+    genre: {
+      _id: genre.id,
+      name: genre.name
+    },
+  }); 
 
   movie = await movie.save();
 
@@ -25,9 +35,19 @@ router.put('/:id', async (req, res) => {
   const { error } = validate(req.body);
   if(error) return res.status(400).send(error.details[0].message);
 
-  const movie = await Movie.findByIdAndUpdate(req.params.id, {
-    new: true
-  });
+  const genre = await Genre.findById(req.body.genreId);
+  if(!genre) return res.status(400).send("Invalid Genre");
+
+  const movie = await Movie.findByIdAndUpdate(req.params.id, 
+    {
+      title: req.body.title,
+      numberInStock: req.body.numberInStock,
+      dailyRentalRate: req.body.dailyRentalRate,
+      genre: {
+        _id: genre._id,
+        name: genre.name
+      }
+    }, { new: true });
 
   if(!movie) return res.status(400).send('The given movie Id was not found');
 
