@@ -18,5 +18,15 @@ function validateGenre(genre) {
   return Joi.validate(genre, schema);
 }
 
+async function createGenre(name) {
+  const genre = new Genre({
+    name,
+  });
+
+  const result = await genre.save();
+  console.log(result);
+}
+
+createGenre('Literature');
 exports.Genre = Genre; 
 exports.validate = validateGenre;

@@ -1,28 +1,43 @@
 const mongoose = require('mongoose');
+const Joi = require('joi');
+const Genre = require('./genre');
 
 const moviesSchema = new mongoose.Schema({
-  name: String,
-  bio: String,
-  website: String
+  title: String,
+  numberInStock: Number,
+  dailyRentalRate: Number,
+  _v: Number,
+  genre: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Genre',
+  }
 });
 
-const Course = mongoose.model('Course', new mongoose.Schema({
-  name: String,
-  authors: [authorSchema]
-}));
+const Movie = mongoose.model('Movie', moviesSchema);
 
-async function createCourse(name, authors) {
-  const course = new Course({
-    name, 
-    authors,
+function validateMovie(movie) {
+  const schema = {
+    title: Joi.string().min(3).required()
+  }
+
+  return Joi.validate(movie, schema);
+}
+
+async function createMovie(title, numberInStock, dailyRentalRate, _v, genre) {
+  const movie = new Movie({
+    title, 
+    numberInStock,
+    dailyRentalRate,
+    _v,
+    genre,
   }); 
   
-  const result = await course.save();
+  const result = await movie.save();
   console.log(result);
 }
 
-async function listCourses() { 
-  const courses = await Course.find();
+async function listMovies() { 
+  const courses = await Movie.find();
   console.log(courses);
 }
 
@@ -43,18 +58,20 @@ async function listCourses() {
 
 // updateAuthor('5fc30369e7f86f74f17ed12a');
 
-async function addAuthor(courseId, author) {
-  const course = await Course.findById(courseId);
-  course.authors.push(author);
-  await course.save();
+async function addGenre(movieId, genre) {
+  const movie = await Movie.findById(movieId);
+  movie.genres.push(genre);
+  await movie.save();
 }
 
-async function removeAuthor(courseId, authorId) {
-  const course = await Course.findById(courseId);
-  const author = course.authors.id(authorId);
-  console.log(author);
-  author.remove();
-  await course.save();
+async function removeGenre(movieId, genreId) {
+  const movie = await Movie.findById(movieId);
+  const genre = movie.genres.id(genreId);
+  console.log(genre);
+  genre.remove();
+  await movie.save();
 }
 
-removeAuthor("5fc30d4bef11377f0e02927a", "5fc30d4bef11377f0e029278");
+createMovie('Gone with the wind', 10, 2, 1,  "5fc5c6a57b8c16a933688898");
+exports.Movie = Movie;
+exports.validate = validateMovie;
