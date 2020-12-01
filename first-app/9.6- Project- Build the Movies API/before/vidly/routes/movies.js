@@ -20,14 +20,14 @@ router.post('/', async (req, res) => {
     title: req.body.title, 
     numberInStock: req.body.numberInStock,
     dailyRentalRate: req.body.dailyRentalRate,
+    // Mongodb里面会生成 version, 所以只取自己想要的那部分数据
     genre: {
-      _id: genre.id,
+      _id: genre._id,
       name: genre.name
     },
   }); 
 
   movie = await movie.save();
-
   res.send(movie);
 });
 
