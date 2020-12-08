@@ -7,8 +7,6 @@ const p = new Promise((resolve, reject) => {
     reject(new Error('message'));
   }, 2000);
 
-  // reject(new Error('message'));
-
 });
 
 p
