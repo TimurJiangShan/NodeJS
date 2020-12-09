@@ -12,13 +12,6 @@ mongoose.connect('mongodb://localhost/mongo-exercises')
     console.log("Connecting failed");
   });
 
-
-// const courses = [
-//   { id: 1, name: 'course1'},
-//   { id: 2, name: 'course2'},
-//   { id: 3, name: 'course3'},
-// ];
-
 const courseSchema = new mongoose.Schema({
   _id: String,
   name: {
