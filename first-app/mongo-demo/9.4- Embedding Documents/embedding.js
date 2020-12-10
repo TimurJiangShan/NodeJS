@@ -32,23 +32,6 @@ async function listCourses() {
   console.log(courses);
 }
 
-// async function updateAuthor(courseId) {
-//   const course = await Course.findById(courseId);
-//   course.author.name = "王后雄";
-//   await course.save();
-// }
-
-// async function updateAuthor(courseID) {
-//   const course = await Course.update({ _id: courseID }, {
-//     $set: {
-//       "author.name": "曲一线"
-//     }
-//   });
-//   console.log(course);
-// }
-
-// updateAuthor('5fc30369e7f86f74f17ed12a');
-
 async function addAuthor(courseId, author) {
   const course = await Course.findById(courseId);
   course.authors.push(author);
@@ -63,10 +46,5 @@ async function removeAuthor(courseId, authorId) {
   await course.save();
 }
 
-// addAuthor("5fc30d4bef11377f0e02927a", new Author({ name: 'Jack', bio: "abcd", website: "www.google.com" }));
 removeAuthor("5fc30d4bef11377f0e02927a", "5fc30d4bef11377f0e029278");
 
-// createCourse('.NET Course', [
-//   new Author({ name: 'Mosh', bio: "CCC", website: "www.github.com" }),
-//   new Author({ name: 'Lily', bio: "CCC", website: "www.github.com" })
-// ]);
